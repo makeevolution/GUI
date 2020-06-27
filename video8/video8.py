@@ -23,17 +23,26 @@ f = Figure(figsize=(5,5),dpi=100) #instantiate a Figure class
 a=f.add_subplot(111) #specify no of plots
 
 def animate(i):
-    pullData = open("sampleData.txt","r").read()
-    dataList=pullData.split("\n")
-    xList=[]
-    yList=[]
-    for eachLine in dataList:
-        if len(eachLine)>1: #To make sure we are processing not an empty line; sometimes the data has an empty line
-            x,y=eachLine.split(',')
-            xList.append(int(x))
-            yList.append(int(y))
+    dataLink="https://bitbay.net/API/Public/BTC/all.json"
+    data=urllib.request.urlopen(dataLink)
+    data=data.read()
+    data=json.loads(data)
+    
+    buys=data['bid']
+    buys_time=data['transactions'][0]['date']
+    buys_time["datestamp"]=np.array(buys_time).astype("datetime64[s]")
+    buyDates=(buys["datestamp"]).tolist()
+    
+    sells=data['bid']
+    sell_time=data['transactions'][0]['date']
+    sell_time["datestamp"]=np.array(sell_time).astype("datetime64[s]")
+    sellDates=(sells["datestamp"]).tolist()
+    
     a.clear()
-    a.plot(xList,yList)
+    
+    a.plot_date(buyDates,buy["price"])
+    a.plot_date(sellDates,sell["price"])
+    
     
 class SeaofBTCapp(tk.Tk): #This class will inherit the attributes and methods of the class tk
                           #So Frame, grid_rowconfigure... is a method within tk.Tk
