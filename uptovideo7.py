@@ -1,3 +1,5 @@
+#follows tutorial from sentdex on tkinter tutorial
+
 import tkinter as tk
 from tkinter import ttk #css for tkinter
 
